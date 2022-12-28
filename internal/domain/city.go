@@ -6,9 +6,9 @@ type City struct {
 }
 
 type Price struct {
-	Avg string `json:"avg"`
-	Min string `json:"min"`
-	Max string `json:"max"`
+	Avg float64 `json:"avg"`
+	Min float64 `json:"min"`
+	Max float64 `json:"max"`
 }
 
 type Property struct {

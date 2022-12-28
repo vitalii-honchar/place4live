@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"place4live/internal/domain"
+	"strconv"
 	"strings"
 )
 
@@ -30,17 +31,30 @@ func parseCity(name string, rc io.ReadCloser) *domain.City {
 			p.Name = strings.TrimSpace(td.Text())
 
 			if pv := s.Find(classFirstCurrency).First(); pv != nil {
-				p.Avg = strings.TrimSpace(pv.Text())
+				s := strings.Split(strings.TrimSpace(pv.Text()), "\u00A0")[0]
+				p.Avg = getAmount(s)
 			}
 			if pl := s.Find(classBarTextLeft).First(); pl != nil {
-				p.Min = strings.TrimSpace(pl.Text())
+				p.Min = getAmount(strings.TrimSpace(pl.Text()))
 			}
 			if ph := s.Find(classBarTextRight).First(); ph != nil {
-				p.Max = strings.TrimSpace(ph.Text())
+				p.Max = getAmount(strings.TrimSpace(ph.Text()))
 			}
 			city.Properties = append(city.Properties, &p)
 		}
 	})
 
 	return &city
+}
+
+func getAmount(s string) float64 {
+	s = strings.ReplaceAll(s, ",", "")
+	if s == "" {
+		return 0
+	}
+	r, err := strconv.ParseFloat(s, 10)
+	if err != nil {
+		log.Printf("Unexpected error during convert string to float: string = %s, err = %v\n", s, err)
+	}
+	return r
 }
