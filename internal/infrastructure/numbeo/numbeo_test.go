@@ -8,6 +8,7 @@ import (
 const mealInexpensiveRestaurant = "Meal, Inexpensive Restaurant"
 const apartment1BedroomOutsideOfCenter = "Apartment (1 bedroom) Outside of Centre"
 const apartment3BedroomOutsideOfCenter = "Apartment (3 bedrooms) Outside of Centre"
+const mortgageInterestRate = "Mortgage Interest Rate in Percentages (%), Yearly, for 20 Years Fixed-Rate"
 
 func TestGetCity(t *testing.T) {
 	t.Run("should return city info when city exists", func(t *testing.T) {
@@ -25,6 +26,7 @@ func TestGetCity(t *testing.T) {
 		checkProperty(t, mealInexpensiveRestaurant, props)
 		checkProperty(t, apartment1BedroomOutsideOfCenter, props)
 		checkProperty(t, apartment3BedroomOutsideOfCenter, props)
+		checkProperty(t, mortgageInterestRate, props)
 	})
 
 	t.Run("should return empty city when city not exists", func(t *testing.T) {
