@@ -23,5 +23,8 @@ func testConnection(t *testing.T) *sql.DB {
 	if err != nil {
 		t.Fatalf("Can't open database connection: connStr = %s, migrations = %s, error = %v\n", connStr, migrations, err)
 	}
+	t.Cleanup(func() {
+		conn.Close()
+	})
 	return conn
 }
