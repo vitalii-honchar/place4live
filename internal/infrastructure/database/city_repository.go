@@ -222,5 +222,8 @@ func readCity(r *sql.Rows) (*domain.City, error) {
 			log.Printf("Missed setter for property: category = %s, property = %v, city = %s\n", category, property, city.Name)
 		}
 	}
+	if city.Id == 0 {
+		return nil, nil
+	}
 	return &city, nil
 }
