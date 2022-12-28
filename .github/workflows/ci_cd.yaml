@@ -32,14 +32,14 @@ jobs:
       - name: Create build folder
         run: mkdir build
 
-#      - name: Launch test infrastructure
-#        run: cd env && docker-compose up -d
+      - name: Launch test infrastructure
+        run: cd env && docker-compose up -d
 
       - name: Build
         run: make build
 
-#      - name: Stop test infrastructure
-#        run: cd env && docker-compose down
+      - name: Stop test infrastructure
+        run: cd env && docker-compose down
 
       - name: Git Version
         id: version
