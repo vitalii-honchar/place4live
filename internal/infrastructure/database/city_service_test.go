@@ -35,18 +35,45 @@ func (cqm *CityQueryMock) GetCity(name string) <-chan *domain.City {
 	return args.Get(0).(<-chan *domain.City)
 }
 
-func TestNewGetCityUseCase(t *testing.T) {
-	t.Run("should call only database and numbeo port when cache was expired", func(t *testing.T) {
+func TestCityService_GetCity(t *testing.T) {
+	name := fmt.Sprintf("City_%d", random.Intn(100))
+	cities := []*domain.City{
+		{Name: name},
+		{Name: name, UpdatedAt: time.Now().Add(-24 * time.Hour)},
+		{Name: name, UpdatedAt: time.Now().Add(-48 * time.Hour)},
+		nil,
+	}
+	for _, city := range cities {
+		t.Run(fmt.Sprintf("GetCity if city %+v returns city and saves it", city), func(t *testing.T) {
+			// GIVEN
+			repositoryMock := &CityRepositoryMock{}
+			queryPort := &CityQueryMock{}
+			queried := &domain.City{Name: name, UpdatedAt: time.Now()}
+			svc := NewCityService(repositoryMock, queryPort)
+
+			repositoryMock.On("FindByName", name).Return(testChannel(city))
+			queryPort.On("GetCity", name).Return(testChannel(queried))
+			repositoryMock.On("Save", queried).Return(testChannel(true))
+
+			// WHEN
+			actual := <-svc.GetCity(name)
+
+			// THEN
+			assert.Equal(t, queried, actual)
+
+			repositoryMock.AssertExpectations(t)
+			queryPort.AssertExpectations(t)
+		})
+	}
+
+	t.Run("GetCity if city exists and not expired returns city without saving it", func(t *testing.T) {
 		// GIVEN
 		repositoryMock := &CityRepositoryMock{}
 		queryPort := &CityQueryMock{}
-		name := fmt.Sprintf("City_%d", random.Intn(100))
-		city := &domain.City{Name: name}
+		city := &domain.City{Name: name, UpdatedAt: time.Now().Add(-1 * time.Hour)}
 		svc := NewCityService(repositoryMock, queryPort)
 
 		repositoryMock.On("FindByName", name).Return(testChannel(city))
-		queryPort.On("GetCity", name).Return(testChannel(city))
-		repositoryMock.On("Save", city).Return(testChannel(true))
 
 		// WHEN
 		actual := <-svc.GetCity(name)
@@ -55,7 +82,8 @@ func TestNewGetCityUseCase(t *testing.T) {
 		assert.Equal(t, city, actual)
 
 		repositoryMock.AssertExpectations(t)
-		queryPort.AssertExpectations(t)
+		queryPort.AssertNotCalled(t, "GetCity", name)
+		repositoryMock.AssertNotCalled(t, "Save", city)
 	})
 }
 
