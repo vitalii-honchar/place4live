@@ -1,9 +1,10 @@
-package database
+package repository
 
 import (
 	"database/sql"
 	"log"
 	"place4live/internal/domain"
+	"place4live/internal/infrastructure/database/postgres"
 	"place4live/internal/lib"
 	"time"
 )
@@ -127,7 +128,7 @@ func NewCityRepository(db *sql.DB) CityRepository {
 
 func (cr *postgresCityRepository) FindByName(name string) <-chan *domain.City {
 	return lib.Async(func() *domain.City {
-		return WithTx(cr.db, func(tx *sql.Tx) *domain.City {
+		return postgres.WithTx(cr.db, func(tx *sql.Tx) *domain.City {
 			rows, err := tx.Query(selectCityByName, name)
 			if err != nil {
 				panic(err)
@@ -144,7 +145,7 @@ func (cr *postgresCityRepository) FindByName(name string) <-chan *domain.City {
 
 func (cr *postgresCityRepository) Save(city *domain.City) <-chan bool {
 	return lib.Async(func() bool {
-		return WithTx(cr.db, func(tx *sql.Tx) bool {
+		return postgres.WithTx(cr.db, func(tx *sql.Tx) bool {
 			cityId, err := saveCityName(tx, city.Name)
 			if err != nil {
 				panic(err)

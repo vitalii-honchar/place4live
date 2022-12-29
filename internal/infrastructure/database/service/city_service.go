@@ -1,8 +1,9 @@
-package database
+package service
 
 import (
 	"place4live/internal/application/port/out"
 	"place4live/internal/domain"
+	repository2 "place4live/internal/infrastructure/database/repository"
 	"place4live/internal/lib"
 	"time"
 )
@@ -10,11 +11,11 @@ import (
 const day = 24 * time.Hour
 
 type CityService struct {
-	repository CityRepository
+	repository repository2.CityRepository
 	queryPort  out.CityQueryOutPort
 }
 
-func NewCityService(r CityRepository, queryPort out.CityQueryOutPort) *CityService {
+func NewCityService(r repository2.CityRepository, queryPort out.CityQueryOutPort) *CityService {
 	return &CityService{repository: r, queryPort: queryPort}
 }
 
