@@ -17,7 +17,7 @@ func GetCity(name string) <-chan *domain.City {
 
 		r, err := http.Get(url)
 		if err != nil {
-			log.Printf("Unexpected error during read information about city: url = %s, err = %v\n", url, err)
+			log.Printf("Unexpected error during read information about dashboard: url = %s, err = %v\n", url, err)
 		} else {
 			defer r.Body.Close()
 			c <- parseCity(name, r.Body)
@@ -28,6 +28,10 @@ func GetCity(name string) <-chan *domain.City {
 
 type CityQueryService struct{}
 
+func NewCityQueryService() *CityQueryService {
+	return &CityQueryService{}
+}
+
 func (cq *CityQueryService) GetCity(name string) <-chan *domain.City {
 	c := make(chan *domain.City, 1)
 	go func() {
@@ -36,7 +40,7 @@ func (cq *CityQueryService) GetCity(name string) <-chan *domain.City {
 
 		r, err := http.Get(url)
 		if err != nil {
-			log.Printf("Unexpected error during read information about city: url = %s, err = %v\n", url, err)
+			log.Printf("Unexpected error during read information about dashboard: url = %s, err = %v\n", url, err)
 		} else {
 			defer r.Body.Close()
 			c <- parseCity(name, r.Body)

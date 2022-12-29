@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"place4live/internal/application/port/out"
 	"place4live/internal/domain"
 	repository2 "place4live/internal/infrastructure/database/repository"
@@ -23,6 +24,7 @@ func (cr *CityService) GetCity(name string) <-chan *domain.City {
 	return lib.Async(func() *domain.City {
 		city := <-cr.repository.FindByName(name)
 		if city == nil || time.Now().In(time.UTC).Sub(city.UpdatedAt) >= day {
+			log.Printf("Refreshing city db cache: name = %s\n", name)
 			city = <-cr.queryPort.GetCity(name)
 			<-cr.repository.Save(city)
 		}

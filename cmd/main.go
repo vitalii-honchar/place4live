@@ -1,31 +1,55 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"database/sql"
 	"log"
-	"net/http"
+	"place4live/internal/application/port/in"
+	"place4live/internal/application/usecase"
+	"place4live/internal/infrastructure/config"
+	"place4live/internal/infrastructure/database/postgres"
+	"place4live/internal/infrastructure/database/repository"
+	"place4live/internal/infrastructure/database/service"
 	"place4live/internal/infrastructure/numbeo"
+	"place4live/internal/infrastructure/web"
+	"place4live/internal/infrastructure/web/dashboard"
 )
 
-func getCity(c *gin.Context) {
-	n := c.Param("name")
+type inPorts struct {
+	getCityInPort in.GetCityInPort
+}
 
-	log.Printf("City name: %s\n", n)
+func createInPorts(db *sql.DB) *inPorts {
+	cityRepository := repository.NewCityRepository(db)
+	numbeCityService := numbeo.NewCityQueryService()
+	cityDbService := service.NewCityService(cityRepository, numbeCityService)
 
-	city := <-numbeo.GetCity(n)
+	return &inPorts{
+		getCityInPort: usecase.NewGetCityUseCase(cityDbService),
+	}
+}
 
-	c.JSON(http.StatusOK, city)
+func createHandlers(ports *inPorts) []web.ApiHandler {
+	return []web.ApiHandler{
+		dashboard.NewGetDashboardHandler(ports.getCityInPort),
+	}
 }
 
 func main() {
-	r := gin.New()
+	cfg, err := config.NewConfig()
+	stopStartup("missed config", err)
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	db, err := postgres.OpenConnection(cfg.DbConnectionStr, cfg.DbMigrationsFolder)
+	stopStartup("failed open db connection", err)
 
-	r.GET("/city/:name", getCity)
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	ports := createInPorts(db)
+	handlers := createHandlers(ports)
+	engine := web.NewApiEngine(handlers...)
+
+	engine.Run()
+}
+
+func stopStartup(reason string, err error) {
+	if err != nil {
+		log.Fatalf("Can't start application: reason = %s, error = %s\n", reason, err)
+	}
 }

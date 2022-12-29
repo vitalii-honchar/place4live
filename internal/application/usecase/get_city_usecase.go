@@ -13,6 +13,6 @@ func NewGetCityUseCase(dbPort out.CityQueryOutPort) *GetCityUseCase {
 	return &GetCityUseCase{outPort: dbPort}
 }
 
-func (gc *GetCityUseCase) getCity(name string) <-chan *domain.City {
+func (gc *GetCityUseCase) GetCity(name string) <-chan *domain.City {
 	return gc.outPort.GetCity(name)
 }
