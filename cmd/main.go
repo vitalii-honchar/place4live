@@ -4,30 +4,21 @@ import (
 	"fmt"
 	"log"
 	"place4live/internal/config"
+	"place4live/internal/module/city"
+	"place4live/internal/module/user"
+	"place4live/internal/module/web"
 )
 
 type module interface {
-	Start(cfg *config.AppContext) error
+	Init(ctx *config.AppContext) error
 	Name() string
 }
 
-var modules = []module{}
-
-//func createInPorts(db *sql.DB) *inPorts {
-//	cityRepository := repository.NewCityRepository(db)
-//	numbeCityService := numbeo.NewCityQueryService()
-//	cityDbService := service.NewCityService(cityRepository, numbeCityService)
-//
-//	return &inPorts{
-//		getCityInPort: usecase.NewGetCityUseCase(cityDbService),
-//	}
-//}
-//
-//func createHandlers(ports *inPorts) []web.ApiHandler {
-//	return []web.ApiHandler{
-//		dashboard.NewGetDashboardHandler(ports.getCityInPort),
-//	}
-//}
+var modules = []module{
+	&city.CityModule{},
+	&user.UserModule{},
+	&web.WebModule{},
+}
 
 func main() {
 	cfg, err := config.NewConfig()
@@ -36,8 +27,8 @@ func main() {
 	stopStartup("failed to create app context", err)
 
 	for _, m := range modules {
-		err := m.Start(ctx)
-		stopStartup(fmt.Sprintf("failed to start module '%s'", m.Name()), err)
+		err := m.Init(ctx)
+		stopStartup(fmt.Sprintf("failed to init module '%s'", m.Name()), err)
 	}
 	ctx.ApiEngine.Run()
 }

@@ -3,8 +3,7 @@ package rest
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"place4live/internal/application/port/in"
-	"place4live/internal/domain"
+	"place4live/internal/module/web/domain"
 	"strconv"
 )
 
@@ -12,11 +11,10 @@ const path = "/dashboard/:id"
 const paramId = "id"
 
 type GetDashboardHandler struct {
-	port in.GetCityInPort
 }
 
-func NewGetDashboardHandler(port in.GetCityInPort) *GetDashboardHandler {
-	return &GetDashboardHandler{port: port}
+func NewGetDashboardHandler() *GetDashboardHandler {
+	return &GetDashboardHandler{}
 }
 
 func (gdh *GetDashboardHandler) Handle(ctx *gin.Context) {
