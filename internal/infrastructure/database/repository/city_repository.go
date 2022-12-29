@@ -1,9 +1,10 @@
-package database
+package repository
 
 import (
 	"database/sql"
 	"log"
 	"place4live/internal/domain"
+	"place4live/internal/infrastructure/database/postgres"
 	"place4live/internal/lib"
 	"time"
 )
@@ -112,62 +113,49 @@ var categorySetters = map[string]func(cp *domain.CityPrices, p *domain.Property)
 	},
 }
 
-type CityRepository struct {
+type CityRepository interface {
+	FindByName(name string) <-chan *domain.City
+	Save(city *domain.City) <-chan bool
+}
+
+type postgresCityRepository struct {
 	db *sql.DB
 }
 
-func NewCityRepository(db *sql.DB) *CityRepository {
-	return &CityRepository{db}
+func NewCityRepository(db *sql.DB) CityRepository {
+	return &postgresCityRepository{db}
 }
 
-func (cr *CityRepository) FindByName(name string) <-chan *domain.City {
+func (cr *postgresCityRepository) FindByName(name string) <-chan *domain.City {
 	return lib.Async(func() *domain.City {
-		tx, err := cr.db.Begin()
-		if err != nil {
-			log.Printf("Unexpected error during openning a transaction: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		defer tx.Rollback()
-
-		rows, err := tx.Query(selectCityByName, name)
-		if err != nil {
-			log.Printf("Unexpected error during selecting city by name: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		defer rows.Close()
-		city, err := readCity(rows)
-		if err != nil {
-			log.Printf("Unexepcted error during read a city from rows: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		return city
+		return postgres.WithTx(cr.db, func(tx *sql.Tx) *domain.City {
+			rows, err := tx.Query(selectCityByName, name)
+			if err != nil {
+				panic(err)
+			}
+			defer rows.Close()
+			city, err := readCity(rows)
+			if err != nil {
+				panic(err)
+			}
+			return city
+		})
 	})
 }
 
-func (cr *CityRepository) Save(city *domain.City) <-chan bool {
+func (cr *postgresCityRepository) Save(city *domain.City) <-chan bool {
 	return lib.Async(func() bool {
-		tx, err := cr.db.Begin()
-		if err != nil {
-			log.Printf("Unexpected error during openning a transaction: city = %+v, error = %v\n", city, err)
-			return false
-		}
-		defer tx.Rollback()
-		cityId, err := saveCityName(tx, city.Name)
-		if err != nil {
-			log.Printf("Unexpected error during saving city name: city = %+v, error = %v\n", city, err)
-			return false
-		}
+		return postgres.WithTx(cr.db, func(tx *sql.Tx) bool {
+			cityId, err := saveCityName(tx, city.Name)
+			if err != nil {
+				panic(err)
+			}
 
-		if err := savePrices(tx, cityId, city); err != nil {
-			log.Printf("Unexpected error during updating categories: city = %+v, error = %v\n", city, err)
-			return false
-		}
-
-		if err := tx.Commit(); err != nil {
-			log.Printf("Unexpected error dirung commit a trasnaction: city = %+v, error = %v\n", city, err)
-			return false
-		}
-		return true
+			if err := savePrices(tx, cityId, city); err != nil {
+				panic(err)
+			}
+			return true
+		})
 	})
 }
 

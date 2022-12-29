@@ -1,4 +1,4 @@
-package database
+package postgres
 
 import (
 	"database/sql"
@@ -21,6 +21,28 @@ func OpenConnection(connStr string, migrationsFile string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, runMigrations(db, migrationsFile)
+}
+
+func WithTx[T any](db *sql.DB, f func(tx *sql.Tx) T) T {
+	tx, err := db.Begin()
+	defer func() {
+		err := recover()
+		if err == nil {
+			err = tx.Commit()
+		}
+
+		if err != nil {
+			log.Printf("Unexpected error in transaction: error = %v", err)
+			tx.Rollback()
+		}
+	}()
+	if err != nil {
+		log.Printf("Unexpected error during openning a transaction: error = %v\n", err)
+		var empty T
+		return empty
+	}
+
+	return f(tx)
 }
 
 func runMigrations(db *sql.DB, migrationsFile string) error {

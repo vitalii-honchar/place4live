@@ -1,8 +1,11 @@
 lint:
 	go vet ./...
 
-test: lint
-	go test -v ./... -covermode=count -coverprofile=coverage.out && go tool cover -func=coverage.out -o=coverage.out
+build_dir:
+	mkdir -p build
+
+test: lint build_dir
+	go test -v ./... -covermode=count -coverprofile=coverage.out && go tool cover -func=coverage.out -o=build/coverage.out
 
 build: test
-	mkdir -p build && go build -o build -v ./...
+	go build -o build -v ./...
