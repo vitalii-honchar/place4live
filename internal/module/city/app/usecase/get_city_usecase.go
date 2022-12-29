@@ -1,15 +1,15 @@
 package usecase
 
 import (
-	"place4live/internal/application/port/out"
-	"place4live/internal/domain"
+	"place4live/internal/module/city/app/port"
+	"place4live/internal/module/city/domain"
 )
 
 type GetCityUseCase struct {
-	outPort out.CityQueryOutPort
+	outPort port.CityQueryOutPort
 }
 
-func NewGetCityUseCase(dbPort out.CityQueryOutPort) *GetCityUseCase {
+func NewGetCityUseCase(dbPort port.CityQueryOutPort) *GetCityUseCase {
 	return &GetCityUseCase{outPort: dbPort}
 }
 

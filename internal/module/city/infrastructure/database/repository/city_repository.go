@@ -3,9 +3,9 @@ package repository
 import (
 	"database/sql"
 	"log"
-	"place4live/internal/domain"
-	"place4live/internal/infrastructure/database/postgres"
 	"place4live/internal/lib"
+	"place4live/internal/lib/postgres"
+	"place4live/internal/module/city/domain"
 	"time"
 )
 

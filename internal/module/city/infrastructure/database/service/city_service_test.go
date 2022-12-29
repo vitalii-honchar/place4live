@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"math/rand"
-	"place4live/internal/domain"
+	"place4live/internal/module/city/domain"
 	"testing"
 	"time"
 )

@@ -3,23 +3,23 @@ package domain
 import "time"
 
 type City struct {
-	Id        int64       `json:"-"`
-	Name      string      `json:"name"`
-	Prices    *CityPrices `json:"prices"`
-	UpdatedAt time.Time   `json:"-"`
+	Id        int64
+	Name      string
+	Prices    *CityPrices
+	UpdatedAt time.Time
 }
 
 type CityPrices struct {
-	Restaurants    `json:"restaurants"`
-	Markets        `json:"markets"`
-	Transportation `json:"transportation"`
-	Utilities      `json:"utilities"`
-	Sports         `json:"sports"`
-	Childcare      `json:"childcare"`
-	Clothing       `json:"clothing"`
-	RentApartment  `json:"rentApartment"`
-	BuyApartment   `json:"buyApartment"`
-	Salaries       `json:"salaries"`
+	Restaurants
+	Markets
+	Transportation
+	Utilities
+	Sports
+	Childcare
+	Clothing
+	RentApartment
+	BuyApartment
+	Salaries
 }
 
 type Restaurants []*Property
