@@ -28,7 +28,8 @@ const selectCityByName = `
 	    cp.name,
 	    cp.avg,
 	    cp.min,
-	    cp.max
+	    cp.max,
+	    cp.updated_at
 	FROM city c
 	INNER JOIN city_price cp ON cp.city_id = c.id
 	WHERE c.name = $1
@@ -200,14 +201,14 @@ func readCity(r *sql.Rows) (*domain.City, error) {
 	for r.Next() {
 		var category string
 		var property domain.Property
-		err := r.Scan(&city.Id, &city.Name, &category, &property.Name, &property.Avg, &property.Min, &property.Max)
+		err := r.Scan(&city.Id, &city.Name, &category, &property.Name, &property.Avg, &property.Min, &property.Max, &city.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
 		if setter, ok := categorySetters[category]; ok {
 			setter(city.Prices, &property)
 		} else {
-			log.Printf("Missed setter for property: category = %s, property = %v, city = %s\n", category, property, city.Name)
+			log.Printf("Missed setter for property: category = %s, property = %v, dashboard = %s\n", category, property, city.Name)
 		}
 	}
 	if city.Id == 0 {

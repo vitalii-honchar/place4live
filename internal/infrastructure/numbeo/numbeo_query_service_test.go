@@ -8,7 +8,7 @@ import (
 const averageMonthlyNetSalary = "Average Monthly Net Salary (After Tax)"
 
 func TestGetCity(t *testing.T) {
-	t.Run("should return city info when city exists", func(t *testing.T) {
+	t.Run("should return dashboard info when dashboard exists", func(t *testing.T) {
 		// GIVEN
 		cn := "Toronto"
 
@@ -31,7 +31,7 @@ func TestGetCity(t *testing.T) {
 		checkPrices(t, city.Prices.Salaries)
 	})
 
-	t.Run("should return empty city when city not exists", func(t *testing.T) {
+	t.Run("should return empty dashboard when dashboard not exists", func(t *testing.T) {
 		// GIVEN
 		cn := "Toronto1"
 

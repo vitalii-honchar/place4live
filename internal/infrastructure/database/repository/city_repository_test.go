@@ -14,7 +14,7 @@ var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 func TestCityRepository_Save(t *testing.T) {
 	repository := NewCityRepository(testConnection(t))
 
-	t.Run("should find city when it was saved", func(t *testing.T) {
+	t.Run("should find dashboard when it was saved", func(t *testing.T) {
 		// GIVEN
 		city := randomCity()
 
@@ -38,7 +38,7 @@ func TestCityRepository_Save(t *testing.T) {
 func TestCityRepository_FindByName(t *testing.T) {
 	repository := NewCityRepository(testConnection(t))
 
-	t.Run("should doesn't find city when it wasn't saved", func(t *testing.T) {
+	t.Run("should doesn't find dashboard when it wasn't saved", func(t *testing.T) {
 		// GIVEN
 		name := fmt.Sprintf("test_%d", seededRand.Intn(100))
 

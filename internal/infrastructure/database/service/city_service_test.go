@@ -44,7 +44,7 @@ func TestCityService_GetCity(t *testing.T) {
 		nil,
 	}
 	for _, city := range cities {
-		t.Run(fmt.Sprintf("GetCity if city %+v returns city and saves it", city), func(t *testing.T) {
+		t.Run(fmt.Sprintf("GetCity if dashboard %+v returns dashboard and saves it", city), func(t *testing.T) {
 			// GIVEN
 			repositoryMock := &CityRepositoryMock{}
 			queryPort := &CityQueryMock{}
@@ -66,7 +66,7 @@ func TestCityService_GetCity(t *testing.T) {
 		})
 	}
 
-	t.Run("GetCity if city exists and not expired returns city without saving it", func(t *testing.T) {
+	t.Run("GetCity if dashboard exists and not expired returns dashboard without saving it", func(t *testing.T) {
 		// GIVEN
 		repositoryMock := &CityRepositoryMock{}
 		queryPort := &CityQueryMock{}
