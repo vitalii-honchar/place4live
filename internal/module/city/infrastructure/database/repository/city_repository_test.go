@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"place4live/internal/module/city/domain"
+	"place4live/test"
 	"testing"
 	"time"
 )
@@ -12,7 +13,7 @@ import (
 var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func TestCityRepository_Save(t *testing.T) {
-	repository := NewCityRepository(testConnection(t))
+	repository := NewCityRepository(test.OpenDbConnection(t))
 
 	t.Run("should find dashboard when it was saved", func(t *testing.T) {
 		// GIVEN
@@ -36,7 +37,7 @@ func TestCityRepository_Save(t *testing.T) {
 }
 
 func TestCityRepository_FindByName(t *testing.T) {
-	repository := NewCityRepository(testConnection(t))
+	repository := NewCityRepository(test.OpenDbConnection(t))
 
 	t.Run("should doesn't find dashboard when it wasn't saved", func(t *testing.T) {
 		// GIVEN

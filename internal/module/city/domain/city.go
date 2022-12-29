@@ -34,9 +34,9 @@ type BuyApartment []*Property
 type Salaries []*Property
 
 type Price struct {
-	Avg float64 `json:"avg"`
-	Min float64 `json:"min"`
-	Max float64 `json:"max"`
+	Avg float64
+	Min float64
+	Max float64
 }
 
 type Property struct {

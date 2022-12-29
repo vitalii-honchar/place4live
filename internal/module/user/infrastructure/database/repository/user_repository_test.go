@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"place4live/internal/module/user/domain"
+	"place4live/test"
 	"testing"
 	"time"
 )
@@ -13,7 +14,7 @@ var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func TestPostgresUserRepository_Save(t *testing.T) {
 	// GIVEN
-	repository := NewUserRepository(testConnection(t))
+	repository := NewUserRepository(test.OpenDbConnection(t))
 	user := testUser(t)
 
 	// WHEN
@@ -26,7 +27,7 @@ func TestPostgresUserRepository_Save(t *testing.T) {
 func TestPostgresUserRepository_FindByUsername(t *testing.T) {
 	t.Run("FindByUsername if user exists returns user", func(t *testing.T) {
 		// GIVEN
-		repository := NewUserRepository(testConnection(t))
+		repository := NewUserRepository(test.OpenDbConnection(t))
 		user := testUser(t)
 
 		// WHEN
@@ -40,7 +41,7 @@ func TestPostgresUserRepository_FindByUsername(t *testing.T) {
 
 	t.Run("FindByUsername if user doesn't exists returns nil", func(t *testing.T) {
 		// GIVEN
-		repository := NewUserRepository(testConnection(t))
+		repository := NewUserRepository(test.OpenDbConnection(t))
 		name := fmt.Sprintf("Username_%d", random.Intn(1000))
 
 		// WHEN
