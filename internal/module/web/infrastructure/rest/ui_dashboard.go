@@ -1,4 +1,4 @@
-package dashboard
+package rest
 
 import (
 	"place4live/internal/domain"

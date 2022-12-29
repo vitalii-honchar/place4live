@@ -1,4 +1,4 @@
-package in
+package port
 
 import "place4live/internal/domain"
 

@@ -1,4 +1,4 @@
-package dashboard
+package rest
 
 import (
 	"github.com/stretchr/testify/assert"
