@@ -18,7 +18,7 @@ type inPorts struct {
 	getCityInPort in.GetCityInPort
 }
 
-func createInPorts(cfg *config.Config, db *sql.DB) *inPorts {
+func createInPorts(db *sql.DB) *inPorts {
 	cityRepository := repository.NewCityRepository(db)
 	numbeCityService := numbeo.NewCityQueryService()
 	cityDbService := service.NewCityService(cityRepository, numbeCityService)
@@ -41,7 +41,7 @@ func main() {
 	db, err := postgres.OpenConnection(cfg.DbConnectionStr, cfg.DbMigrationsFolder)
 	stopStartup("failed open db connection", err)
 
-	ports := createInPorts(cfg, db)
+	ports := createInPorts(db)
 	handlers := createHandlers(ports)
 	engine := web.NewApiEngine(handlers)
 
