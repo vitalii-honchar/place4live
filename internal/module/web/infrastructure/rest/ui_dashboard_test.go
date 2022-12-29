@@ -2,7 +2,7 @@ package rest
 
 import (
 	"github.com/stretchr/testify/assert"
-	"place4live/internal/domain"
+	"place4live/internal/module/web/domain"
 	"testing"
 )
 
