@@ -45,10 +45,10 @@ func getDashboard(id int64) *domain.Dashboard {
 	return &domain.Dashboard{
 		Id: id,
 		Cities: map[int64]*domain.DashboardCity{
-			1: {10, domain.City{Name: "Toronto"}},
-			2: {7, domain.City{Name: "Calgary"}},
-			3: {5, domain.City{Name: "Kyiv"}},
-			4: {23, domain.City{Name: "Edmonton"}},
+			1: {Order: 10, City: domain.City{Name: "Toronto"}},
+			2: {Order: 7, City: domain.City{Name: "Calgary"}},
+			3: {Order: 5, City: domain.City{Name: "Kyiv"}},
+			4: {Order: 23, City: domain.City{Name: "Edmonton"}},
 		},
 	}
 }
