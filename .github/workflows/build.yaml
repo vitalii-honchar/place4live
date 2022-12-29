@@ -43,7 +43,7 @@ jobs:
         id: save-executable
         uses: actions/upload-artifact@v3
         with:
-          name: cmd
+          name: executable
           path: build/cmd
 
       - name: Save Code Coverage
@@ -62,6 +62,12 @@ jobs:
     needs: build
     if: github.ref == 'refs/heads/main'
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
       - name: Restore coverage
         id: restore-coverage
         uses: actions/download-artifact@v3
@@ -109,7 +115,7 @@ jobs:
         id: restore-binary
         uses: actions/download-artifact@v3
         with:
-          name: cmd
+          name: executable
 
       - name: Prepare docker image build
         id: prepare-build
