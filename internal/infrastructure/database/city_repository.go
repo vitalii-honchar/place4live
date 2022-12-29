@@ -112,15 +112,20 @@ var categorySetters = map[string]func(cp *domain.CityPrices, p *domain.Property)
 	},
 }
 
-type CityRepository struct {
+type CityRepository interface {
+	FindByName(name string) <-chan *domain.City
+	Save(city *domain.City) <-chan bool
+}
+
+type postgresCityRepository struct {
 	db *sql.DB
 }
 
-func NewCityRepository(db *sql.DB) *CityRepository {
-	return &CityRepository{db}
+func NewCityRepository(db *sql.DB) CityRepository {
+	return &postgresCityRepository{db}
 }
 
-func (cr *CityRepository) FindByName(name string) <-chan *domain.City {
+func (cr *postgresCityRepository) FindByName(name string) <-chan *domain.City {
 	return lib.Async(func() *domain.City {
 		return WithTx(cr.db, func(tx *sql.Tx) *domain.City {
 			rows, err := tx.Query(selectCityByName, name)
@@ -137,7 +142,7 @@ func (cr *CityRepository) FindByName(name string) <-chan *domain.City {
 	})
 }
 
-func (cr *CityRepository) Save(city *domain.City) <-chan bool {
+func (cr *postgresCityRepository) Save(city *domain.City) <-chan bool {
 	return lib.Async(func() bool {
 		return WithTx(cr.db, func(tx *sql.Tx) bool {
 			cityId, err := saveCityName(tx, city.Name)
