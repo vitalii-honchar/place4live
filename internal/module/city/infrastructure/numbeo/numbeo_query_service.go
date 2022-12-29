@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"place4live/internal/domain"
+	"place4live/internal/module/city/domain"
 )
 
 const numbeoTemplate = "https://www.numbeo.com/cost-of-living/in/%s"

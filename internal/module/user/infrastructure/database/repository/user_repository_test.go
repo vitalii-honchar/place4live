@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
-	"place4live/internal/domain"
+	"place4live/internal/module/user/domain"
 	"testing"
 	"time"
 )

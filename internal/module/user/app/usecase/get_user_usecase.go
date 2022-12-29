@@ -1,15 +1,15 @@
 package usecase
 
 import (
-	"place4live/internal/application/port/out"
-	"place4live/internal/domain"
+	"place4live/internal/module/user/app/port"
+	"place4live/internal/module/user/domain"
 )
 
 type GetUserUseCase struct {
-	outPort out.UserQueryOutPort
+	outPort port.UserQueryOutPort
 }
 
-func NewGetUserUseCase(outPort out.UserQueryOutPort) *GetUserUseCase {
+func NewGetUserUseCase(outPort port.UserQueryOutPort) *GetUserUseCase {
 	return &GetUserUseCase{outPort: outPort}
 }
 

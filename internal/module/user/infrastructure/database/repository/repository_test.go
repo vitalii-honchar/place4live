@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"place4live/internal/infrastructure/database/postgres"
+	"place4live/internal/lib/postgres"
 	"testing"
 )
 

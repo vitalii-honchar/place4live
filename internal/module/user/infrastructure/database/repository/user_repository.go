@@ -2,9 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"place4live/internal/domain"
-	"place4live/internal/infrastructure/database/postgres"
 	"place4live/internal/lib"
+	"place4live/internal/lib/postgres"
+	"place4live/internal/module/user/domain"
 )
 
 const selectByUsername = "SELECT id, username, password_hash FROM p4l_user WHERE username = $1"

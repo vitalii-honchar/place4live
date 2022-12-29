@@ -1,7 +1,7 @@
 package numbeo
 
 import (
-	"place4live/internal/domain"
+	"place4live/internal/module/city/domain"
 	"testing"
 )
 
