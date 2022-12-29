@@ -1,51 +1,45 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 	"log"
-	"place4live/internal/application/port/in"
-	"place4live/internal/application/usecase"
-	"place4live/internal/infrastructure/config"
-	"place4live/internal/infrastructure/database/postgres"
-	"place4live/internal/infrastructure/database/repository"
-	"place4live/internal/infrastructure/database/service"
-	"place4live/internal/infrastructure/numbeo"
-	"place4live/internal/infrastructure/web"
-	"place4live/internal/infrastructure/web/dashboard"
+	"place4live/internal/config"
 )
 
-type inPorts struct {
-	getCityInPort in.GetCityInPort
+type module interface {
+	Start(cfg *config.AppContext) error
+	Name() string
 }
 
-func createInPorts(db *sql.DB) *inPorts {
-	cityRepository := repository.NewCityRepository(db)
-	numbeCityService := numbeo.NewCityQueryService()
-	cityDbService := service.NewCityService(cityRepository, numbeCityService)
+var modules = []module{}
 
-	return &inPorts{
-		getCityInPort: usecase.NewGetCityUseCase(cityDbService),
-	}
-}
-
-func createHandlers(ports *inPorts) []web.ApiHandler {
-	return []web.ApiHandler{
-		dashboard.NewGetDashboardHandler(ports.getCityInPort),
-	}
-}
+//func createInPorts(db *sql.DB) *inPorts {
+//	cityRepository := repository.NewCityRepository(db)
+//	numbeCityService := numbeo.NewCityQueryService()
+//	cityDbService := service.NewCityService(cityRepository, numbeCityService)
+//
+//	return &inPorts{
+//		getCityInPort: usecase.NewGetCityUseCase(cityDbService),
+//	}
+//}
+//
+//func createHandlers(ports *inPorts) []web.ApiHandler {
+//	return []web.ApiHandler{
+//		dashboard.NewGetDashboardHandler(ports.getCityInPort),
+//	}
+//}
 
 func main() {
 	cfg, err := config.NewConfig()
 	stopStartup("missed config", err)
+	ctx, err := config.NewAppContext(cfg)
+	stopStartup("failed to create app context", err)
 
-	db, err := postgres.OpenConnection(cfg.DbConnectionStr, cfg.DbMigrationsFolder)
-	stopStartup("failed open db connection", err)
-
-	ports := createInPorts(db)
-	handlers := createHandlers(ports)
-	engine := web.NewApiEngine(handlers...)
-
-	engine.Run()
+	for _, m := range modules {
+		err := m.Start(ctx)
+		stopStartup(fmt.Sprintf("failed to start module '%s'", m.Name()), err)
+	}
+	ctx.ApiEngine.Run()
 }
 
 func stopStartup(reason string, err error) {
