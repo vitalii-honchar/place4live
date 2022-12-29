@@ -122,52 +122,34 @@ func NewCityRepository(db *sql.DB) *CityRepository {
 
 func (cr *CityRepository) FindByName(name string) <-chan *domain.City {
 	return lib.Async(func() *domain.City {
-		tx, err := cr.db.Begin()
-		if err != nil {
-			log.Printf("Unexpected error during openning a transaction: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		defer tx.Rollback()
-
-		rows, err := tx.Query(selectCityByName, name)
-		if err != nil {
-			log.Printf("Unexpected error during selecting city by name: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		defer rows.Close()
-		city, err := readCity(rows)
-		if err != nil {
-			log.Printf("Unexepcted error during read a city from rows: name = %s, error = %v\n", name, err)
-			return nil
-		}
-		return city
+		return WithTx(cr.db, func(tx *sql.Tx) *domain.City {
+			rows, err := tx.Query(selectCityByName, name)
+			if err != nil {
+				panic(err)
+			}
+			defer rows.Close()
+			city, err := readCity(rows)
+			if err != nil {
+				panic(err)
+			}
+			return city
+		})
 	})
 }
 
 func (cr *CityRepository) Save(city *domain.City) <-chan bool {
 	return lib.Async(func() bool {
-		tx, err := cr.db.Begin()
-		if err != nil {
-			log.Printf("Unexpected error during openning a transaction: city = %+v, error = %v\n", city, err)
-			return false
-		}
-		defer tx.Rollback()
-		cityId, err := saveCityName(tx, city.Name)
-		if err != nil {
-			log.Printf("Unexpected error during saving city name: city = %+v, error = %v\n", city, err)
-			return false
-		}
+		return WithTx(cr.db, func(tx *sql.Tx) bool {
+			cityId, err := saveCityName(tx, city.Name)
+			if err != nil {
+				panic(err)
+			}
 
-		if err := savePrices(tx, cityId, city); err != nil {
-			log.Printf("Unexpected error during updating categories: city = %+v, error = %v\n", city, err)
-			return false
-		}
-
-		if err := tx.Commit(); err != nil {
-			log.Printf("Unexpected error dirung commit a trasnaction: city = %+v, error = %v\n", city, err)
-			return false
-		}
-		return true
+			if err := savePrices(tx, cityId, city); err != nil {
+				panic(err)
+			}
+			return true
+		})
 	})
 }
 

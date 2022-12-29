@@ -33,12 +33,17 @@ func TestCityRepository_Save(t *testing.T) {
 		assert.Greater(t, actual.Id, int64(0))
 		assert.Equal(t, city.Prices, actual.Prices)
 	})
+}
+
+func TestCityRepository_FindByName(t *testing.T) {
+	repository := NewCityRepository(testConnection(t))
 
 	t.Run("should doesn't find city when it wasn't saved", func(t *testing.T) {
 		// GIVEN
+		name := fmt.Sprintf("test_%d", seededRand.Intn(100))
 
-		// AND WHEN
-		actual := <-repository.FindByName(fmt.Sprintf("test_%d", seededRand.Intn(100)))
+		// WHEN
+		actual := <-repository.FindByName(name)
 
 		// AND THEN
 		assert.Nil(t, actual)
