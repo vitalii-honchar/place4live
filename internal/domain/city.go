@@ -3,10 +3,10 @@ package domain
 import "time"
 
 type City struct {
-	Id        int64       `json:"id"`
+	Id        int64       `json:"-"`
 	Name      string      `json:"name"`
 	Prices    *CityPrices `json:"prices"`
-	UpdatedAt time.Time   `json:"updatedAt"`
+	UpdatedAt time.Time   `json:"-"`
 }
 
 type CityPrices struct {
