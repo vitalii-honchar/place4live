@@ -1,7 +1,7 @@
-package in
+package port
 
 import "place4live/internal/domain"
 
-type GetCityInPort interface {
+type CityQueryOutPort interface {
 	GetCity(name string) <-chan *domain.City
 }
