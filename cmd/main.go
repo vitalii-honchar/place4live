@@ -43,7 +43,7 @@ func main() {
 
 	ports := createInPorts(db)
 	handlers := createHandlers(ports)
-	engine := web.NewApiEngine(handlers)
+	engine := web.NewApiEngine(handlers...)
 
 	engine.Run()
 }

@@ -10,7 +10,7 @@ type ApiHandler interface {
 	Method() string
 }
 
-func NewApiEngine(handlers []ApiHandler) *gin.Engine {
+func NewApiEngine(handlers ...ApiHandler) *gin.Engine {
 	engine := gin.New()
 
 	for _, h := range handlers {
