@@ -32,7 +32,7 @@ func TestNewGetCityUseCase(t *testing.T) {
 		outPort.On("GetCity", name).Return(testChannel(city))
 
 		// WHEN
-		actual := <-useCase.getCity(name)
+		actual := <-useCase.GetCity(name)
 
 		// THEN
 		assert.Equal(t, city, actual)
