@@ -1,5 +1,5 @@
 # place4live
-![Coverage](https://img.shields.io/badge/Coverage-77.0%25-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-68.1%25-yellow)
 
 
 Web platform for find the best place for live with city comparisons:
