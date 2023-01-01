@@ -4,7 +4,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"io"
 	"log"
-	"place4live/internal/domain"
+	"place4live/internal/module/city/domain"
 	"strconv"
 	"strings"
 )
