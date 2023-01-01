@@ -26,11 +26,18 @@ func main() {
 	ctx, err := config.NewAppContext(cfg)
 	stopStartup("failed to create app context", err)
 
+	log.Printf("Started modules: %v\n", startModules(ctx))
+	ctx.ApiEngine.Run()
+}
+
+func startModules(ctx *config.AppContext) []string {
+	var started []string
 	for _, m := range modules {
 		err := m.Init(ctx)
 		stopStartup(fmt.Sprintf("failed to init module '%s'", m.Name()), err)
+		started = append(started, m.Name())
 	}
-	ctx.ApiEngine.Run()
+	return started
 }
 
 func stopStartup(reason string, err error) {
