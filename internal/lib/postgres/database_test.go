@@ -6,7 +6,7 @@ import (
 )
 
 const connStr = "postgresql://user:password@localhost/place4live?sslmode=disable"
-const migrations = "../../../../migrations"
+const migrations = "../../../migrations"
 
 func TestOpenConnection(t *testing.T) {
 	// GIVEN-WHEN

@@ -12,9 +12,11 @@ import (
 
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
+const migrations = "../../../../../../migrations"
+
 func TestPostgresUserRepository_Save(t *testing.T) {
 	// GIVEN
-	repository := NewUserRepository(test.OpenDbConnection(t))
+	repository := NewUserRepository(test.OpenDbConnection(t, migrations))
 	user := testUser(t)
 
 	// WHEN
@@ -27,7 +29,7 @@ func TestPostgresUserRepository_Save(t *testing.T) {
 func TestPostgresUserRepository_FindByUsername(t *testing.T) {
 	t.Run("FindByUsername if user exists returns user", func(t *testing.T) {
 		// GIVEN
-		repository := NewUserRepository(test.OpenDbConnection(t))
+		repository := NewUserRepository(test.OpenDbConnection(t, migrations))
 		user := testUser(t)
 
 		// WHEN
@@ -41,7 +43,7 @@ func TestPostgresUserRepository_FindByUsername(t *testing.T) {
 
 	t.Run("FindByUsername if user doesn't exists returns nil", func(t *testing.T) {
 		// GIVEN
-		repository := NewUserRepository(test.OpenDbConnection(t))
+		repository := NewUserRepository(test.OpenDbConnection(t, migrations))
 		name := fmt.Sprintf("Username_%d", random.Intn(1000))
 
 		// WHEN

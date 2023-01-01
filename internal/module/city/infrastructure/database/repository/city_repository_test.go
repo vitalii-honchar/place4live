@@ -12,8 +12,10 @@ import (
 
 var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
+const migrations = "../../../../../../migrations"
+
 func TestCityRepository_Save(t *testing.T) {
-	repository := NewCityRepository(test.OpenDbConnection(t))
+	repository := NewCityRepository(test.OpenDbConnection(t, migrations))
 
 	t.Run("should find dashboard when it was saved", func(t *testing.T) {
 		// GIVEN
@@ -37,7 +39,7 @@ func TestCityRepository_Save(t *testing.T) {
 }
 
 func TestCityRepository_FindByName(t *testing.T) {
-	repository := NewCityRepository(test.OpenDbConnection(t))
+	repository := NewCityRepository(test.OpenDbConnection(t, migrations))
 
 	t.Run("should doesn't find dashboard when it wasn't saved", func(t *testing.T) {
 		// GIVEN
