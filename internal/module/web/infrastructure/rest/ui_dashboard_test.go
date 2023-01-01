@@ -10,11 +10,11 @@ func TestNewUiDashboard(t *testing.T) {
 	// GIVEN
 	dashboard := &domain.Dashboard{
 		Id: 10,
-		Cities: map[int64]*domain.DashboardCity{
-			1: {Order: 10, City: domain.City{Id: 1, Name: "Toronto"}},
-			2: {Order: 7, City: domain.City{Id: 2, Name: "Calgary"}},
-			3: {Order: 5, City: domain.City{Id: 3, Name: "Kyiv"}},
-			4: {Order: 23, City: domain.City{Id: 4, Name: "Edmonton"}},
+		Cities: map[int64]domain.UiCity{
+			1: {Order: 10, Id: 1, Name: "Toronto"},
+			2: {Order: 7, Id: 2, Name: "Calgary"},
+			3: {Order: 5, Id: 3, Name: "Kyiv"},
+			4: {Order: 23, Id: 4, Name: "Edmonton"},
 		},
 	}
 
@@ -28,12 +28,13 @@ func TestNewUiDashboard(t *testing.T) {
 func convertToDomain(d *uiDashboard) *domain.Dashboard {
 	res := &domain.Dashboard{
 		Id:     d.Id,
-		Cities: make(map[int64]*domain.DashboardCity),
+		Cities: make(map[int64]domain.UiCity),
 	}
 	for _, city := range d.Cities {
-		res.Cities[city.Id] = &domain.DashboardCity{
+		res.Cities[city.Id] = domain.UiCity{
 			Order: city.Order,
-			City:  city.City,
+			Id:    city.Id,
+			Name:  city.Name,
 		}
 	}
 	return res

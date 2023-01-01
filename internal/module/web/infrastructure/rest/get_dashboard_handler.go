@@ -42,11 +42,11 @@ func (gdh *GetDashboardHandler) Method() string {
 func getDashboard(id int64) *domain.Dashboard {
 	return &domain.Dashboard{
 		Id: id,
-		Cities: map[int64]*domain.DashboardCity{
-			1: {Order: 10, City: domain.City{Name: "Toronto"}},
-			2: {Order: 7, City: domain.City{Name: "Calgary"}},
-			3: {Order: 5, City: domain.City{Name: "Kyiv"}},
-			4: {Order: 23, City: domain.City{Name: "Edmonton"}},
+		Cities: map[int64]domain.UiCity{
+			1: {Order: 10, Name: "Toronto"},
+			2: {Order: 7, Name: "Calgary"},
+			3: {Order: 5, Name: "Kyiv"},
+			4: {Order: 23, Name: "Edmonton"},
 		},
 	}
 }
