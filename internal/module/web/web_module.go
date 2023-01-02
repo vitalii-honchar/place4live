@@ -16,7 +16,8 @@ type WebModule struct {
 func (wm *WebModule) Init(ctx *config.AppContext) error {
 	jwtTokenQueryInPort := service.NewJwtService(ctx.ApiSecret)
 
-	ctx.ApiEngine.AddHandler(login.NewHandler(service.NewLoginService(wm.UserModule.AuthUserService)))
+	loginService := service.NewLoginService(wm.UserModule.AuthUserService, jwtTokenQueryInPort)
+	ctx.ApiEngine.AddHandler(login.NewHandler(loginService))
 	ctx.ApiEngine.AddMiddleware(auth.JwtAuthMiddleware(jwtTokenQueryInPort))
 	ctx.ApiEngine.AddHandler(rest.NewGetDashboardHandler())
 	return nil

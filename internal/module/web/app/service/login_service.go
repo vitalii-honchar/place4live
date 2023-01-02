@@ -11,8 +11,8 @@ type LoginService struct {
 	jwtService  *JwtService
 }
 
-func NewLoginService(authService api.AuthUserService) *LoginService {
-	return &LoginService{authService: authService}
+func NewLoginService(authService api.AuthUserService, jwtService *JwtService) *LoginService {
+	return &LoginService{authService: authService, jwtService: jwtService}
 }
 
 func (ls *LoginService) Login(username string, password string) (string, bool) {

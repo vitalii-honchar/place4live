@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"os"
 	"place4live/internal/module/web/domain"
 	"strconv"
 	"time"
@@ -48,7 +47,7 @@ func (js *JwtService) generateToken(jt domain.JwtToken) (string, error) {
 	claims[claimExp] = jt.ExpiredIn.UnixMilli()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(os.Getenv(js.secret)))
+	return token.SignedString([]byte(js.secret))
 }
 
 func (js *JwtService) convertToken(t string) (*jwt.Token, error) {

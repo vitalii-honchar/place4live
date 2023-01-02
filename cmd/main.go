@@ -14,10 +14,14 @@ type module interface {
 	Name() string
 }
 
+var cityModule = &city.CityModule{}
+var userModule = &user.UserModule{}
+var webModule = &web.WebModule{UserModule: userModule}
+
 var modules = []module{
-	&city.CityModule{},
-	&user.UserModule{},
-	&web.WebModule{},
+	cityModule,
+	userModule,
+	webModule,
 }
 
 func main() {
