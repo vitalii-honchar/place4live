@@ -17,6 +17,10 @@ type JwtService struct {
 	secret string
 }
 
+func NewJwtService(secret string) *JwtService {
+	return &JwtService{secret: secret}
+}
+
 func (js *JwtService) Get(token string) (domain.JwtToken, error) {
 	jwtToken, err := js.convertToken(token)
 	if err != nil || !jwtToken.Valid {

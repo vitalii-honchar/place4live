@@ -9,6 +9,7 @@ import (
 type AppContext struct {
 	Db        *sql.DB
 	ApiEngine *web.ApiEngine
+	Config
 }
 
 func NewAppContext(cfg *Config) (*AppContext, error) {
@@ -16,5 +17,5 @@ func NewAppContext(cfg *Config) (*AppContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &AppContext{Db: db, ApiEngine: web.NewApiEngine()}, nil
+	return &AppContext{Db: db, ApiEngine: web.NewApiEngine(), Config: *cfg}, nil
 }
