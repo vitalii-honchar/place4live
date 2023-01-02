@@ -16,3 +16,7 @@ func NewUserService(rep repository.UserRepository) *UserService {
 func (us *UserService) GetUser(username string) <-chan *domain.User {
 	return us.userRepository.FindByUsername(username)
 }
+
+func (us *UserService) Save(user *domain.User) <-chan bool {
+	return us.userRepository.Save(user)
+}

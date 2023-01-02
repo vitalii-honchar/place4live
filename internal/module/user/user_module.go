@@ -10,15 +10,19 @@ import (
 )
 
 type UserModule struct {
-	AuthUserService api.AuthUserService
+	AuthUserService   api.AuthUserService
+	CreateUserService api.CreateUserService
 }
 
 func (um *UserModule) Init(ctx *config.AppContext) error {
 	rep := repository.NewUserRepository(ctx.Db)
 	userOutPort := service.NewUserService(rep)
 	userInPort := usecase.NewGetUserUseCase(userOutPort)
+	createUserInPort := usecase.NewCreateUserUseCase(userOutPort)
 
-	um.AuthUserService = internalApi.NewAuthService(userInPort)
+	internalUserSvc := internalApi.NewUserService(userInPort, createUserInPort)
+	um.AuthUserService = internalUserSvc
+	um.CreateUserService = internalUserSvc
 	return nil
 }
 

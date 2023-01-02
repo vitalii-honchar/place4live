@@ -27,11 +27,8 @@ func (h *Handler) Handle(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := h.inPort.Register(req.Username, req.Password); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"success": true})
-	}
+	ok := h.inPort.Register(req.Username, req.Password)
+	ctx.JSON(http.StatusOK, gin.H{"success": ok})
 }
 
 func (h *Handler) Path() string {
