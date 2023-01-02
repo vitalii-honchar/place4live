@@ -1,8 +1,13 @@
 package user
 
-import "place4live/internal/config"
+import (
+	"place4live/internal/config"
+	"place4live/internal/module/user/api"
+)
 
-type UserModule struct{}
+type UserModule struct {
+	AuthUserService api.AuthUserService
+}
 
 func (um *UserModule) Init(ctx *config.AppContext) error {
 	return nil
