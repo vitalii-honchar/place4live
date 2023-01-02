@@ -29,11 +29,11 @@ func (js *JwtService) Get(token string) (domain.JwtToken, error) {
 	if !ok {
 		return domain.JwtToken{}, tokenError("unexpected JWT token")
 	}
-	userId, err := strconv.ParseInt(fmt.Sprintf("%d", claims[claimUserId]), 10, 64)
+	userId, err := strconv.ParseInt(fmt.Sprintf("%.0f", claims[claimUserId]), 10, 64)
 	if err != nil {
 		return domain.JwtToken{}, err
 	}
-	expiredIn, err := strconv.ParseInt(fmt.Sprintf("%d", claims[claimUserId]), 10, 64)
+	expiredIn, err := strconv.ParseInt(fmt.Sprintf("%.0f", claims[claimUserId]), 10, 64)
 	if err != nil {
 		return domain.JwtToken{}, err
 	}

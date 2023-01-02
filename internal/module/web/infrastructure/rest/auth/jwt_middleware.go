@@ -14,7 +14,7 @@ func JwtAuthMiddleware(inPort port.JwtTokenQueryInPort) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := inPort.Get(getToken(c))
 		if err != nil {
-			c.String(http.StatusBadRequest, "Missed JWT token")
+			c.String(http.StatusForbidden, "Access Forbidden")
 			c.Abort()
 			return
 		}
