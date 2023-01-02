@@ -2,10 +2,13 @@ package web
 
 import (
 	"place4live/internal/config"
+	"place4live/internal/module/user"
 	"place4live/internal/module/web/infrastructure/rest"
 )
 
-type WebModule struct{}
+type WebModule struct {
+	UserModule *user.UserModule
+}
 
 func (wm *WebModule) Init(ctx *config.AppContext) error {
 	ctx.ApiEngine.AddHandler(rest.NewGetDashboardHandler())
