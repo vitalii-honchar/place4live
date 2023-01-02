@@ -24,3 +24,4 @@ go.work
 .idea/
 build/
 credentials.txt
+test.http

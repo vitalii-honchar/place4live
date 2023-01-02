@@ -20,6 +20,10 @@ func (ae *ApiEngine) AddHandler(h ApiHandler) {
 	})
 }
 
+func (ae *ApiEngine) AddMiddleware(f gin.HandlerFunc) {
+	ae.engine.Use(f)
+}
+
 func (ae *ApiEngine) Run() {
 	ae.engine.Run()
 }
